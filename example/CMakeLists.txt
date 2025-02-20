@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.25)
 
 project(StaticLibrariesCombiner)
 
-include(${CMAKE_SOURCE_DIR}/../cmake/combiner.cmake)
+include(${CMAKE_SOURCE_DIR}/../combiner.cmake)
 
 add_subdirectory(libA)
 
