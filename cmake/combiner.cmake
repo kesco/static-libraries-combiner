@@ -1,6 +1,18 @@
+# Function: combine_static_libraries
+# Combines multiple static libraries into a single static library.
+#
+# Arguments:
+#   base_lib:  The name of the base library target. Dependencies of this library
+#              will be recursively added to the final static library.
+#   target_lib_name:  The name of the target static library to be created.
 function(combine_static_libraries base_lib target_lib_name)
   list(APPEND static_libs ${base_lib})
 
+  # Inner function: get_lib_deps_recursively
+  # Recursively retrieves all dependent static libraries of a given target.
+  #
+  # Arguments:
+  #   target:  The name of the target to check for dependencies.
   function(get_lib_deps_recursively target)
     set(link_libs LINK_LIBRARIES)
     get_target_property(target_type ${target} TYPE)
@@ -34,18 +46,18 @@ function(combine_static_libraries base_lib target_lib_name)
 
   list(REMOVE_DUPLICATES static_libs)
 
-  set(target_lib_path 
+  set(target_lib_path
     ${CMAKE_BINARY_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}${target_lib_name}${CMAKE_STATIC_LIBRARY_SUFFIX})
 
   if (CMAKE_CXX_COMPILER_ID MATCHES "^(Clang|GNU)$")
     file(WRITE ${CMAKE_BINARY_DIR}/${target_lib_name}.ar.in
       "CREATE ${target_lib_path}\n" )
-        
+
     foreach(tgt IN LISTS static_libs)
       file(APPEND ${CMAKE_BINARY_DIR}/${target_lib_name}.ar.in
         "ADDLIB $<TARGET_FILE:${tgt}>\n")
     endforeach()
-    
+
     file(APPEND ${CMAKE_BINARY_DIR}/${target_lib_name}.ar.in "SAVE\n")
     file(APPEND ${CMAKE_BINARY_DIR}/${target_lib_name}.ar.in "END\n")
 
@@ -96,8 +108,8 @@ function(combine_static_libraries base_lib target_lib_name)
   add_dependencies(${custom_target_name} ${base_lib})
 
   add_library(${target_lib_name} STATIC IMPORTED)
-  set_target_properties(${target_lib_name} 
-    PROPERTIES 
+  set_target_properties(${target_lib_name}
+    PROPERTIES
       IMPORTED_LOCATION ${target_lib_path}
       INTERFACE_INCLUDE_DIRECTORIES $<TARGET_PROPERTY:${base_lib},INTERFACE_INCLUDE_DIRECTORIES>)
   add_dependencies(${target_lib_name} ${custom_target_name})
