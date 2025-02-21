@@ -8,4 +8,4 @@ add_subdirectory(libA)
 
 set(COMBINER_SRC main.cpp)
 add_executable(demo ${COMBINER_SRC})
-target_link_libraries(demo A)
+target_link_libraries(demo A_ALL)

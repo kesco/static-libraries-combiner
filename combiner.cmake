@@ -107,7 +107,7 @@ function(combine_static_libraries base_lib target_lib_name)
   add_custom_target(${custom_target_name} ALL DEPENDS ${target_lib_path})
   add_dependencies(${custom_target_name} ${base_lib})
 
-  add_library(${target_lib_name} STATIC IMPORTED)
+  add_library(${target_lib_name} STATIC IMPORTED GLOBAL)
   set_target_properties(${target_lib_name}
     PROPERTIES
       IMPORTED_LOCATION ${target_lib_path}
