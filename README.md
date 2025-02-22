@@ -10,4 +10,7 @@ include(${CMAKE_SOURCE_DIR}/../combiner.cmake)
 
 # use the function to combine the libraries
 combine_static_libraries(${TARGET_LIB} ${TARGET_LIB}_Bundle)
+
+# direct link to the combined library
+target_link_libraries(${EXECUTABLE} ${TARGET_LIB}_Bundle)
 ```
